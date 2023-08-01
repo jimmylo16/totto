@@ -1,10 +1,13 @@
-import { RegisterUser } from "@/components/common/RegisterUser";
-import { ValidateUser } from "@/components/common/ValidateUser";
+import { RegisterUser } from "@/components/Users/RegisterUser";
+import { ValidateUser } from "@/components/Users/ValidateUser";
+import { NeedHelp } from "@/components/common/NeedHelp";
 
 export default function Home() {
   return (
     <div>
-      <ValidateUser />
+      {/* <ValidateUser /> */}
+      <RegisterUser />
+      <NeedHelp />
     </div>
   );
 }

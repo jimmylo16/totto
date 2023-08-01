@@ -9,3 +9,7 @@
 #__next {
   @apply h-full;
 }
+
+.modal-scroll::-webkit-scrollbar {
+  display: none;
+}
