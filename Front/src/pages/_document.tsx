@@ -1,13 +1,17 @@
-import { Html, Head, Main, NextScript } from 'next/document'
+import { Footer } from "@/components/Layout/Footer";
+import { Navbar } from "@/components/Layout/Navbar";
+import { Html, Head, Main, NextScript } from "next/document";
 
 export default function Document() {
   return (
-    <Html lang="en">
+    <Html lang="en" className="h-full">
       <Head />
-      <body>
+      <Navbar />
+      <body className="h-fit">
         <Main />
         <NextScript />
+        <Footer />
       </body>
     </Html>
-  )
+  );
 }
