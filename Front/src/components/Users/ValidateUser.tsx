@@ -1,21 +1,43 @@
 import { useGlobalState } from "@/hooks/useGlobalState";
-import { Field, Form, Formik, FormikHelpers } from "formik";
-import React from "react";
+import { Form, Formik } from "formik";
+import React, { Dispatch, FC, SetStateAction, useState } from "react";
 import { Button } from "../common/Button";
-interface Values {
-  email: string;
+import { axiosCall } from "@/infraestructure/api/axios";
+import { Input } from "../common/Input";
+import {
+  Values,
+  validationFormInitialValues,
+  validationFormSchema,
+} from "@/schema/ValidationSchema";
+import { UserResponse } from "@/interfaces/Users";
+import { useRouter } from "next/router";
+
+interface ValidateUserProps {
+  setShowRegister: Dispatch<SetStateAction<boolean>>;
+  setInitialEmail: Dispatch<SetStateAction<string>>;
 }
-
-export const ValidateUser = () => {
-  const { setShowError } = useGlobalState();
-
-  const onSubmit = (
-    values: Values,
-    { setSubmitting }: FormikHelpers<Values>
-  ) => {
-    setTimeout(() => {
-      setShowError(true);
-    }, 500);
+export const ValidateUser: FC<ValidateUserProps> = ({
+  setShowRegister,
+  setInitialEmail,
+}) => {
+  const { setShowError, setErrorMsg } = useGlobalState();
+  const [isLoading, setIsLoading] = useState(false);
+  const onSubmit = async (values: Values) => {
+    setIsLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    const axios = await axiosCall<UserResponse>({
+      method: "post",
+      endpoint: "/users/find-by-email",
+      id: values.email,
+    });
+    setIsLoading(false);
+    if (axios.error) {
+      setInitialEmail(values.email);
+      setShowRegister(true);
+      return;
+    }
+    setErrorMsg(axios.message);
+    setShowError(true);
   };
 
   return (
@@ -26,20 +48,22 @@ export const ValidateUser = () => {
           con el proceso.
         </h1>
         <Formik
-          initialValues={{
-            email: "",
-          }}
+          initialValues={validationFormInitialValues}
+          validationSchema={validationFormSchema}
           onSubmit={onSubmit}
         >
-          <Form className="flex flex-col items-center justify-center w-3/4 mb-4">
-            <Field
+          <Form className="flex flex-col w-3/4 mb-4 ">
+            <Input
               id="email"
               name="email"
               placeholder="Email"
               type="email"
-              className="border-2 border-gray-300  p-2 w-3/4 mb-5"
+              label="Email"
+              className="pb-6"
             />
-            <Button>Enviar</Button>
+            <div className="flex justify-center pt-6">
+              <Button loading={isLoading}>Enviar</Button>
+            </div>
           </Form>
         </Formik>
       </section>

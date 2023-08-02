@@ -1,6 +1,6 @@
 import { useGlobalState } from "@/hooks/useGlobalState";
 import { Field, Form, Formik, FormikHelpers } from "formik";
-import React from "react";
+import React, { Dispatch, FC, SetStateAction, useState } from "react";
 import { Button } from "../common/Button";
 import { Input } from "../common/Input";
 import {
@@ -9,28 +9,51 @@ import {
   validationRegisterSchema,
 } from "@/schema/RegisterSchema";
 import { ciudadOptions, departamentoOptions } from "./OptionsHelper";
+import { axiosCall } from "@/infraestructure/api/axios";
 
-export const RegisterUser = () => {
+interface RegisterUserProps {
+  setShowRegister: Dispatch<SetStateAction<boolean>>;
+  initialEmail: string;
+}
+export const RegisterUser: FC<RegisterUserProps> = ({
+  setShowRegister,
+  initialEmail,
+}) => {
   const { setShowError } = useGlobalState();
+  const [isLoading, setIsLoading] = useState(false);
+  const onSubmit = async (
+    values: RegisterValues,
+    formikHelpers: FormikHelpers<RegisterValues>
+  ) => {
+    setIsLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    const axios = await axiosCall<any>({
+      method: "post",
+      endpoint: "/users",
+      body: values,
+    });
+    setIsLoading(false);
+    console.log(axios, values, formikHelpers);
+  };
   return (
     <div className="overflow-auto">
       <section className="flex flex-col items-center justify-center  mt-10">
         <Formik
-          initialValues={initialRegisterValues}
+          initialValues={{ ...initialRegisterValues, email: initialEmail }}
           validationSchema={validationRegisterSchema}
-          onSubmit={(
-            values: RegisterValues,
-            { setSubmitting }: FormikHelpers<RegisterValues>
-          ) => {
-            console.log({ values });
-            setTimeout(() => {
-              setShowError(true);
-              setSubmitting(false);
-            }, 500);
-          }}
+          onSubmit={onSubmit}
         >
           {({ values, setFieldValue }) => (
             <Form className="flex flex-col  justify-center w-3/4 mb-4  gap-6">
+              <span
+                className="flex  items-center cursor-pointer"
+                onClick={() => setShowRegister(false)}
+              >
+                <span className="material-symbols-outlined mr-4">
+                  chevron_left
+                </span>
+                volver
+              </span>
               <Input
                 id="email"
                 name="email"
@@ -114,11 +137,11 @@ export const RegisterUser = () => {
                 <span>¿ Tienes Hijos ?</span>
                 <div className="flex gap-4">
                   <label>
-                    <Field type="radio" name="hijos" value="One" />
+                    <Field type="radio" name="hijos" value="YES" />
                     Si
                   </label>
                   <label>
-                    <Field type="radio" name="hijos" value="Two" />
+                    <Field type="radio" name="hijos" value="NO" />
                     No
                   </label>
                 </div>
@@ -127,17 +150,17 @@ export const RegisterUser = () => {
                 <span>Género</span>
                 <div className="flex gap-4">
                   <label>
-                    <Field type="radio" name="genero" value="Masculino" />
+                    <Field type="radio" name="genero" value="masculino" />
                     Masculino
                   </label>
                   <label>
-                    <Field type="radio" name="genero" value="Femenino" />
+                    <Field type="radio" name="genero" value="femenino" />
                     Femenino
                   </label>
                 </div>
               </div>
               <div className="flex justify-center">
-                <Button>Enviar</Button>
+                <Button loading={isLoading}>Enviar</Button>
               </div>
             </Form>
           )}
