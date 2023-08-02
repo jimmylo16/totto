@@ -22,6 +22,7 @@ export class UsersService {
     if (user.error) {
       try {
         const user = this.usersRepository.create(createUserDto);
+        this.logger.log(`Usuario creado con éxito: ${createUserDto.email}`);
         return {
           message: `Usuario creado con éxito`,
           statusCode: 201,
@@ -79,15 +80,15 @@ export class UsersService {
     const user = await this.usersRepository.findOneBy({ email });
     if (!user) {
       return {
-        message: `User with the ${email} not found`,
+        message: `El usuario con el correo ${email} no fue encontrado, procede con el registro`,
         statusCode: 404,
         error: true,
         data: null,
       };
     }
     return {
-      message: `User with the ${email} found`,
-      statusCode: 200,
+      message: `Ya hay un usuario con el correo: ${email}`,
+      statusCode: 201,
       error: false,
       data: user,
     };

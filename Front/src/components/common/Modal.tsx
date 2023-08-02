@@ -41,7 +41,7 @@ export const Modal = ({ showModal, setShowModal, children }: TModal) => {
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <Dialog.Panel
-                className={`modal-scroll transform  overflow-hidden overflow-y-scroll rounded-[32px] text-left shadow-modal-shadow  backdrop-blur-2xl   transition-all 
+                className={`modal-scroll transform  overflow-hidden overflow-y-scroll  text-left shadow-modal-shadow  backdrop-blur-2xl   transition-all 
                'h-full w-full' `}
               >
                 {children}

@@ -34,9 +34,11 @@ export const ValidateUser: FC<ValidateUserProps> = ({
     if (axios.error) {
       setInitialEmail(values.email);
       setShowRegister(true);
+      setShowError(true);
+      setErrorMsg({ message: axios.message, statusCode: axios.statusCode });
       return;
     }
-    setErrorMsg(axios.message);
+    setErrorMsg({ message: axios.message, statusCode: axios.statusCode });
     setShowError(true);
   };
 

@@ -34,7 +34,7 @@ export const RegisterUser: FC<RegisterUserProps> = ({
       body: values,
     });
     setIsLoading(false);
-    setErrorMsg(axios.message);
+    setErrorMsg({ message: axios.message, statusCode: axios.statusCode });
     setShowError(true);
   };
   return (

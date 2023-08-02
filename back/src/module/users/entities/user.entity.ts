@@ -19,15 +19,19 @@ export class User {
 
   @Column('int')
   identification: number;
+
   @Column('varchar')
   nombre: string;
+
   @Column('varchar')
   apellido: string;
 
   @Column('int', { nullable: true })
   numero: number;
+
   @Column()
   departamento: string;
+
   @Column()
   ciudad: string;
 
