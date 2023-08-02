@@ -17,15 +17,20 @@ export class UsersService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
   ) {}
-  create(createUserDto: CreateUserDto) {
-    try {
-      const user = this.usersRepository.create(createUserDto);
-      return this.usersRepository.save(user);
-    } catch (error) {
-      this.logger.error(error);
-      throw new InternalServerErrorException(
-        'Unexpected error, check server logs',
-      );
+  async create(createUserDto: CreateUserDto) {
+    const user = await this.findByEmail(createUserDto.email);
+    if (user.error) {
+      try {
+        const user = this.usersRepository.create(createUserDto);
+        return this.usersRepository.save(user);
+      } catch (error) {
+        this.logger.error(error);
+        throw new InternalServerErrorException(
+          'Unexpected error, check server logs',
+        );
+      }
+    } else {
+      throw new NotFoundException('User already exists');
     }
   }
 
@@ -63,8 +68,18 @@ export class UsersService {
   async findByEmail(email: string) {
     const user = await this.usersRepository.findOneBy({ email });
     if (!user) {
-      throw new NotFoundException('User not found');
+      return {
+        message: `User with the ${email} not found`,
+        statusCode: 404,
+        error: true,
+        data: null,
+      };
     }
-    return user;
+    return {
+      message: `User with the ${email} found`,
+      statusCode: 200,
+      error: false,
+      data: user,
+    };
   }
 }

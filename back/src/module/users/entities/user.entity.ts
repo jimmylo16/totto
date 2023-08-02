@@ -17,7 +17,7 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Column('int', { unique: true })
+  @Column('int')
   identification: number;
   @Column('varchar')
   nombre: string;

@@ -5,6 +5,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { NotFoundException } from '@nestjs/common';
+import { CreateUserDto } from './dto/create-user.dto';
 
 export const mockUser: User = {
   email: 'jimmylo16@gmail.com',
@@ -19,6 +20,12 @@ export const mockUser: User = {
   genero: '',
 };
 const mockUsers = [mockUser];
+export const mockFindResponse = {
+  message: `User with the email not found`,
+  statusCode: 404,
+  error: true,
+  data: null,
+};
 describe('UsersService', () => {
   let service: UsersService;
   let usersRepository: Repository<User>;
@@ -52,8 +59,13 @@ describe('UsersService', () => {
   });
 
   describe('create()', () => {
-    it('should successfully insert a user', () => {
-      expect(service.create(mockUser)).resolves.toEqual(mockUser);
+    it('should successfully insert a user', async () => {
+      jest.spyOn(service, 'findByEmail').mockResolvedValue(mockFindResponse);
+
+      jest.spyOn(usersRepository, 'create').mockReturnValue(mockUser);
+      jest.spyOn(usersRepository, 'save').mockResolvedValue(mockUser);
+      const result = await service.create(mockUser);
+      expect(result).toEqual(mockUser);
     });
   });
   describe('findAll()', () => {
