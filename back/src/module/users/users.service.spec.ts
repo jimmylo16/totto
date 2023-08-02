@@ -26,6 +26,12 @@ export const mockFindResponse = {
   error: true,
   data: null,
 };
+export const mockCreateResponse = {
+  message: `User created successfully`,
+  statusCode: 201,
+  error: false,
+  data: mockUser,
+};
 describe('UsersService', () => {
   let service: UsersService;
   let usersRepository: Repository<User>;
@@ -65,7 +71,7 @@ describe('UsersService', () => {
       jest.spyOn(usersRepository, 'create').mockReturnValue(mockUser);
       jest.spyOn(usersRepository, 'save').mockResolvedValue(mockUser);
       const result = await service.create(mockUser);
-      expect(result).toEqual(mockUser);
+      expect(result).toEqual(mockCreateResponse);
     });
   });
   describe('findAll()', () => {

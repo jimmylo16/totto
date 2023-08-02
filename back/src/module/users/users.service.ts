@@ -22,7 +22,12 @@ export class UsersService {
     if (user.error) {
       try {
         const user = this.usersRepository.create(createUserDto);
-        return this.usersRepository.save(user);
+        return {
+          message: `User created successfully`,
+          statusCode: 201,
+          error: false,
+          data: await this.usersRepository.save(user),
+        };
       } catch (error) {
         this.logger.error(error);
         throw new InternalServerErrorException(
