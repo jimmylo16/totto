@@ -5,10 +5,10 @@ services:
     image: mysql:debian
     restart: always
     ports:
-      - '5432:5432'
+      - '3306:3306'
     environment:
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
-    container_name: doubleVDB
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    container_name: tottoDB
     volumes:
       - ./mysql:/var/lib/mysql
