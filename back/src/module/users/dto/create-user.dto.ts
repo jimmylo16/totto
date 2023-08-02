@@ -15,6 +15,7 @@ export class CreateUserDto {
 
   @IsNumber()
   @IsPositive()
+  @Max(999999999)
   identification: number;
 
   @IsString()
