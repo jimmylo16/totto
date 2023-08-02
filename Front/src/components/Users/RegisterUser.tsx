@@ -10,6 +10,7 @@ import {
 } from "@/schema/RegisterSchema";
 import { ciudadOptions, departamentoOptions } from "./OptionsHelper";
 import { axiosCall } from "@/infraestructure/api/axios";
+import { RegisterResponse } from "@/interfaces/Users";
 
 interface RegisterUserProps {
   setShowRegister: Dispatch<SetStateAction<boolean>>;
@@ -19,7 +20,7 @@ export const RegisterUser: FC<RegisterUserProps> = ({
   setShowRegister,
   initialEmail,
 }) => {
-  const { setShowError } = useGlobalState();
+  const { setShowError, setErrorMsg } = useGlobalState();
   const [isLoading, setIsLoading] = useState(false);
   const onSubmit = async (
     values: RegisterValues,
@@ -27,13 +28,14 @@ export const RegisterUser: FC<RegisterUserProps> = ({
   ) => {
     setIsLoading(true);
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    const axios = await axiosCall<any>({
+    const axios = await axiosCall<RegisterResponse>({
       method: "post",
       endpoint: "/users",
       body: values,
     });
     setIsLoading(false);
-    console.log(axios, values, formikHelpers);
+    setErrorMsg(axios.message);
+    setShowError(true);
   };
   return (
     <div className="overflow-auto">

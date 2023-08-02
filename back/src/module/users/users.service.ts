@@ -23,7 +23,7 @@ export class UsersService {
       try {
         const user = this.usersRepository.create(createUserDto);
         return {
-          message: `User created successfully`,
+          message: `Usuario creado con éxito`,
           statusCode: 201,
           error: false,
           data: await this.usersRepository.save(user),
@@ -35,7 +35,12 @@ export class UsersService {
         );
       }
     } else {
-      throw new NotFoundException('User already exists');
+      return {
+        message: `El usuario con el correo ${createUserDto.email} ya existe`,
+        statusCode: 400,
+        error: true,
+        data: null,
+      };
     }
   }
 
