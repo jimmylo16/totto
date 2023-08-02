@@ -15,7 +15,7 @@ export class CreateUserDto {
 
   @IsNumber()
   @IsPositive()
-  identification: string;
+  identification: number;
 
   @IsString()
   nombre: string;

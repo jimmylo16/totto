@@ -18,7 +18,7 @@ export class User {
   email: string;
 
   @Column('int', { unique: true })
-  identification: string;
+  identification: number;
   @Column('varchar')
   nombre: string;
   @Column('varchar')

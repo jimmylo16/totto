@@ -8,7 +8,7 @@ import { NotFoundException } from '@nestjs/common';
 
 export const mockUser: User = {
   email: 'jimmylo16@gmail.com',
-  identification: '1233694641',
+  identification: 1233694641,
   nombre: 'Jimmy',
   apellido: 'Alejandro',
   numero: 3131313131,

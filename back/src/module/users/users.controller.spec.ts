@@ -21,6 +21,19 @@ describe('UsersController', () => {
               .mockImplementation((user: CreateUserDto) =>
                 Promise.resolve({ user_id: '1', ...user }),
               ),
+            findAll: jest
+              .fn()
+              .mockResolvedValue([
+                mockUser,
+                { ...mockUser, email: 'test@test.com', identification: 1234 },
+              ]),
+            findOne: jest.fn().mockImplementation((user_id: string) =>
+              Promise.resolve({
+                ...mockUser,
+                user_id,
+              }),
+            ),
+            remove: jest.fn(),
           },
         },
       ],
@@ -41,6 +54,28 @@ describe('UsersController', () => {
         ...mockUser,
       });
       expect(usersService.create).toHaveBeenCalledWith(mockUser);
+    });
+  });
+
+  describe('findAll()', () => {
+    it('should find all users ', () => {
+      usersController.findAll();
+      expect(usersService.findAll).toHaveBeenCalled();
+    });
+  });
+  describe('findOne()', () => {
+    it('should find a user', () => {
+      expect(usersController.findOne('1')).resolves.toEqual({
+        user_id: '1',
+        ...mockUser,
+      });
+      expect(usersService.findOne).toHaveBeenCalled();
+    });
+  });
+  describe('remove()', () => {
+    it('should remove the user', () => {
+      usersController.remove('1');
+      expect(usersService.remove).toHaveBeenCalled();
     });
   });
 });
