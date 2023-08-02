@@ -18,6 +18,10 @@ This is an app where you can add a user to a database and validate if the user i
 - [Docker](https://www.docker.com/): A platform for developing, shipping, and running applications inside containers.
 - [Docker Compose](https://docs.docker.com/compose/): A tool for defining and running multi-container Docker applications.
 
+## Very Important!
+
+If you restart the server once up and the database already had records in it, you must delete them because it will cause problems in the autogeneration of entities.
+
 ## Backend Installation
 
 1. Clone the repository and navigate to the back folder
