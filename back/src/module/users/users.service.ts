@@ -1,6 +1,7 @@
 import {
   Injectable,
   InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -11,6 +12,7 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
+  private readonly logger = new Logger('UsersService');
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
@@ -20,6 +22,7 @@ export class UsersService {
       const user = this.usersRepository.create(createUserDto);
       return this.usersRepository.save(user);
     } catch (error) {
+      this.logger.error(error);
       throw new InternalServerErrorException(
         'Unexpected error, check server logs',
       );
